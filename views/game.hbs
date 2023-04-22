@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle</title>
+    
+<style>
+    img{
+        width:20%;
+    }
+body {font-family: Arial, Helvetica, sans-serif;}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 40px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0); /* Black w/ opacity */
+}
+
+.modal1 {
+  position: fixed; /* Stay in place */
+  left: 40%;
+  top: 0;
+  width: 20%; /* Full width */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>      
+<div class="modal1">
+
+  <!-- Modal content -->
+  <div class="modal-content" style="padding: 0;">
+    <span id="timer"></span> ||
+    <span id="wrong">5</span> Attempts left 
+  </div>
+
+</div>
+<script type="text/javascript">
+    window.onbeforeunload = function() {
+        alert( "Dude, are you sure you want to leave? Think of the kittens!");
+    }
+</script>    
+<div id="head">
+    <div id="timer"></div>
+    <button onclick="exit()">Exit</button>
+</div>
+<!-- The Modal -->
+<div id="lvl0" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        Welcome to this interesting Puzzle. <br>
+        Here  you will solve the puzzles to reach your destination.  <br>
+        Puzzles can and will be challanging and your performance is measured on how fast you solve. <br>
+        Are you ready for this Challange.<br>
+        <strong>Note: 5 Wrong attempts may lead to end</strong><br>
+        <button onclick="start(0)">Start</button>
+  </div>
+
+</div>
+<div id="lvl1" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        Hello {{user}}, It's currently morning. I hope it was a sound sleep as you were busy yesterday doing your new job as a Manager in MNC, and you are about to start your day then your phone gives you a remainder about the task that you were supposed to complete today. Being smart and creative you set your remainder as a puzzle. <br>
+        <img src="puzzle/question1.png"> 
+        <pre>
+Alligator		Bear		  Elephant	
+Frog		    Giraffe		  Goat	
+Lion		    Meerkat		  Monkey	
+Panda		    Penguin		  PolarBear	
+Stork		    Tiger		  Toad
+
+This puzzle is a word search puzzle that has a hidden message in it.
+First find all the words in the list.
+Words can go in any direction and share letters as well as cross over each other.
+Once you find all the words. Copy the unused letters starting in the top left corner into the blanks to reveal the hidden message.
+        </pre>
+        <button onclick="sample()">Click to see sample quation and solution</button>
+        So what is your remainder?
+        <input type="text" id="remainder">
+        <button onclick="check1()">Check</button>
+  </div>
+
+</div>
+<div id="sample" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        <button onclick="close1()">&times;</button>
+        Sample Puzzle is as follows. <br>
+        <img src="puzzle/sample-question2.png">
+        <img src="puzzle/sample-solution2.png" alt=""><br>
+        Its solution is "WHAT IS YOUR NAME"<br>
+  </div>
+
+</div>  
+<div id="lvl2" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        So you have to go to school. Oh yes its your interview today. Be ready and take your documents.
+
+        You have placed your documents inside a object which identifies itself as "Most have clothes on the outside, but I have clothes inside";
+        So where are your documents? 
+        <input type="text" id="riddle1">
+        <button onclick="check2()">Check</button>
+  </div>
+
+</div>
+<div id="lvl3" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        Great you are ready for your interview. So now lock the door and keep your key in safe place where you usually keep.
+
+        The place identifies itself as "I greet every guest, but never say a word."
+        <input type="text" id="riddle2">
+        <button onclick="check3()">Check</button>
+  </div>
+
+</div>
+<div id="lvl4" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    So you are ready to go.
+        Have a safe journey.
+        <a href="/maze"><button>Lets go</button></a>
+  </div>
+
+</div>
+<div id="lvl5" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    Welcome {{user}} to School, you need to clear logical round first to proceed.
+        You are requested to solve this puzzle.<br>
+        <br><img src="/puzzle/Question3.png" alt="" style="width:50%"><br>
+        <input type="text" class="values">
+        <input type="text" class="values">
+        <input type="text" class="values">
+        <input type="text" class="values">
+        <input type="text" class="values">
+        <input type="text" class="values">
+        <input type="text" class="values">
+        <button onclick="check5()">Check</button>
+  </div>
+
+</div>
+<div id="lvl6" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        Great You are sucessfully qualified for interview. 
+        Now you need to answer few questions.
+        <br>
+        Explain about yourself <br>
+        <textarea type="text" id="field1"></textarea>
+<br>
+        What are your hobbies <br>
+        <textarea type="text" id="field2"></textarea>
+<br>
+        <button onclick="check6()">Check</button>
+  </div>
+
+</div>
+<div id="lvl7" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        
+        WOW Congratulations {{user}}, you are just one step behind for your appointment.
+        The only problem is that the principal is a sekshpare fan and She has asked you to quote him which she is thinking right now.
+        But don't worry, she is helpful so has decided to give you a hint about the quote she is expecting <br>
+        <img src="puzzle/Question4.png" style="width:100%"> <br>
+        <pre>
+            The letters from each cell are below the puzzle.
+Try to rebuild the original message by choosing the letters for each cell.
+        </pre>
+        <input type="text" id="quote">
+
+        <button onclick="check7()">Check</button>
+  </div>
+
+</div>
+<div id="lvl8" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        Hurray {{user}}, you just got your offer letter.
+
+        Will you accept now?
+        <input type="checkbox" id="accept">
+
+        <button onclick="check8()">Check</button>
+  </div>
+
+</div>
+<div id="lvl9" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        You won
+  </div>
+
+</div>
+<div id="lvl10" class="modal level">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        You have recently joined as a manager. Why should you be a teacher?
+  </div>
+
+</div>
+<div id="lvl11" class="modal level" style="background-color: #000;">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    Sorry you have 5 wrong attempts 
+<a href="/new">
+    <div class="btn btn-primary" id="new">New game</div>
+</a>
+  </div>
+
+</div>
+    {{!-- <div id="lvl00">
+        Welcome to this interesting Puzzle. <br>
+        Here  you will solve the puzzles to reach your destination.  <br>
+        Puzzles can and will be challanging and your performance is measured on how fast you solve. <br>
+        Are you ready for this Challange.  <br>
+        <button onclick="start()">Start</button>
+    </div>
+    <div id="lvl10">
+        Hello {{user}}, It's currently morning. I hope it was a sound sleep as you were busy yesterday as a Manager in MNC, and you are about to start your day then your phone gives you a remainder about the task that you were supposed to complete today. Being smart and creative you set your remainder as a puzzle. 
+        Sample Puzzle is as follows.
+        <img src="/frontend/sample1.png">
+        Your remainder puzzle is
+        <img src="/frontend/question1.png">
+        So what is your remainder?
+        <input type="text">
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl20">
+        So you have to go to school. Oh yes its your interview today. Be ready and take your documents.
+
+        You have placed your documents inside a object which identifies itself as "Most have clothes on the outside, but I have clothes inside";
+        So where are your documents? 
+        <input type="text">
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl30">
+        Great you are ready for your interview. So now lock the door and keep your key in safe place where you usually keep.
+
+        The place identifies itself as "I greet every guest, but never say a word."
+        <input type="text">
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl40">
+        So you are ready to go.
+        Have a safe journey.
+        
+        <input type="text">
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl50">
+        Welcome {{user}} to School, you need to clear logical round first to proceed.
+        You are requested to solve this puzzle.
+        <input type="text">
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl60">
+        Great You are sucessfully qualified for interview. 
+        Now you need to answer few questions.
+        
+        Explain about yourself
+        <input type="text">
+
+        What are your hobbies
+        <input type="text">
+
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl70">
+        WOW Congratulations {{user}}, you are just one step behind for your appointment.
+        The only problem is that the principal is a sekshpare fan and She has asked you to quote him which she is thinking right now.
+        But don't worry, she is helpful so has decided to give you a hint about the quote she is expecting
+        <img src="quote">
+        <input type="text">
+
+        <button onclick="check()">Check</button>
+    </div>
+    <div id="lvl7">
+        Hurray {{user}}, you just got your offer letter.
+
+        What will you do now?
+
+        <img src="quote">
+        <input type="text">
+
+        <button onclick="check()">Check</button>
+    </div> --}}
+    <script>
+        var lvl = document.getElementsByClassName("level");
+        start({{lvl}})
+        var time = {{time}};
+        var time_pass = 0;
+        function timepass(){
+            setInterval(function(){
+                time_pass++;
+            },1000);
+        }
+        var time_wasted=0;
+        var wrong = {{wrong}};
+        document.getElementById("wrong").innerHTML= 5-wrong;
+
+        function start(i){
+            if(i!=-1){
+            lvl[i].style.display = "none";
+            }
+            lvl[i+1].style.display = "block";
+            if(i=={{lvl}}){ 
+                setInterval(function(){
+                    document.getElementById("timer").innerHTML = time++ + " Seconds";
+                    if(wrong == 5){
+                        $.post("/out",
+                            {time:time},
+                            function (data, status) {
+                                lvl[8].style.display = "none";
+                                lvl[11].style.display = "block";
+                                
+                            });
+                    }
+                }, 1000);  
+            }
+        }
+        {{!-- var timeDisplay = --}}
+        function check1(){
+            $.post("/question1",
+                    {
+                        answer: document.getElementById("remainder").value,
+                        time: time,
+                        wrong:wrong
+                    },
+                    function (data, status) {
+                        if(data.result){
+                            start(1);
+                        }else{
+                            wrong++;
+                            document.getElementById("wrong").innerHTML= 5-wrong;
+                            alert("Wrong Attempt. Please check if you have double spaces or any non english alphabet")
+                        };
+                    });
+        }
+        function check2(){
+            $.post("/question2",
+                    {
+                        answer: document.getElementById("riddle1").value,
+                        time: time,
+                        wrong: wrong
+                    },
+                    function (data, status) {
+                        if(data.result){
+                            start(2);
+                        }else{
+                            wrong++;
+                            document.getElementById("wrong").innerHTML= 5-wrong;
+                            alert("Wrong Attempt. Please check if you have double spaces or any non english alphabet")
+                        };
+                    });
+        }
+        function check3(){
+            $.post("/question3",
+                    {
+                        answer: document.getElementById("riddle2").value,
+                        time: time,
+                        wrong: wrong
+                    },
+                    function (data, status) {
+                        if(data.result){
+                            start(3);
+                        }else{
+                            wrong++;
+                            document.getElementById("wrong").innerHTML= 5-wrong;
+                            alert("Wrong Attempt. Please check if you have double spaces or any non english alphabet")
+                        };
+                    });
+        }
+        function check4(){
+            start(4);
+        }
+        function check5(){
+            var values = [0,0,0,0,0,0,0];
+            var answers = document.getElementsByClassName("values");
+            for(var i = 0; i<answers.length; i++){
+                values[i]=answers[i].value;
+            }
+            console.log(values)
+            $.post("/question5",
+                    {
+                        answer: JSON.stringify(values),
+                        time: time,
+                        wrong: wrong
+
+                    },
+                    function (data, status) {
+                        if(data.result){
+                            start(5);
+                            timepass();
+                        }else{
+                            wrong++;
+                            document.getElementById("wrong").innerHTML= 5-wrong;
+                            alert("Wrong Attempt. Retry")
+                        };
+                    });
+        }
+        function check6(){
+            if(document.getElementById('field1').value !="" && document.getElementById('field2').value !="" ){
+                start(6);
+                time_wasted = time_pass;
+            }else{
+                alert("All fields are compulsory");
+            }
+        }
+        function check7(){
+            $.post("/question7",
+                    {
+                        answer: document.getElementById("quote").value,
+                        time: time-time_wasted,
+                        wrong: wrong
+                    },
+                    function (data, status) {
+                        if(data.result){
+                            start(7);
+                        }else{
+                            wrong++;
+                            document.getElementById("wrong").innerHTML= 5-wrong;
+                            alert("Wrong Attempt. Please check if you have double spaces or any non english alphabet")
+                        };
+                    });
+        }
+        function check8(){
+            $.post("/question8",
+                    {
+                        answer: document.getElementById("accept").checked,
+                        time: time-time_wasted,
+                        wrong: wrong
+                    },
+                    function (data, status) {
+                        if(data.result){
+                            start(8);
+                        }else{
+                            lvl[8].style.display = "none";
+                            lvl[10].style.display = "block";
+                        }
+                    });
+        }
+        function sample(){
+            document.getElementById("sample").style.display = "block";
+            document.getElementById("sample").style.backgroundColor = "rgba(0,0,0,0.4)";
+        }
+        function close1(){
+            document.getElementById("sample").style.display = "none";
+        }
+
+// Get the button that opens the modal
+// var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+{{!-- btn.onclick = function() {
+  modal.style.display = "block";
+} --}}
+
+// When the user clicks on <span> (x), close the modal
+// span.onclick = function() {
+//   modal.style.display = "none";
+// }
+
+// When the user clicks anywhere outside of the modal, close it
+{{!-- window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+} --}}
+    </script>
+</body>
+</html>
