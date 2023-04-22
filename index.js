@@ -113,7 +113,7 @@ app.post("/register", isLoggedOut, async (req, res) => {
       }
     );
     await con.query(
-      `INSERT INTO users VALUES ('${email}','${result}', '${name}')`,
+      `INSERT INTO users VALUES ('${email}','${result}', '${name}','0')`,
       (err, result, fields) => {
         if (!err) {
           var session = req.session;
@@ -121,6 +121,7 @@ app.post("/register", isLoggedOut, async (req, res) => {
           session.name = name;
           return res.redirect("/");
         }
+        res.send(err);
       }
     );
   });
@@ -159,10 +160,10 @@ app.get("/new", async (req, res) => {
 app.get("/resume", async (req, res) => {
   req.session.valid = 1;
   await con.query(
-    `SELECT * FROM game_stat WHERE player_id='${req.session.user}' AND stat <= 8 AND stat != -1 ORDER BY id DESC limit 1`,
+    `SELECT * FROM game_stat WHERE player_id='${req.session.user}' AND stat < 8 AND stat != -1 ORDER BY id DESC limit 1`,
     function (err, result, fields) {
-      if (!result) {
-        res.send("You have no pending record");
+      if (result.length == 0) {
+        res.send("You have no pending Game try new one by refresing this page");
       }
       console.log(result);
       console.log(JSON.stringify(result));
@@ -304,4 +305,64 @@ app.post("/out", (req, res) => {
   );
   console.log("a");
   res.send("out");
+});
+
+function isAdmin(req, res, next) {
+  if (req.session.isAdmin == "1") {
+    next();
+  } else {
+    res.send("You are not permitted here");
+  }
+}
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+});
+app.use(isAdmin);
+
+app.get("/dashboard", async (req, res) => {
+  await con.query(
+    `SELECT g.player_id as email, u.name as player_id,MIN(g.total_time) as time FROM game_stat g, users u where stat = 8 and u.email = g.player_id GROUP BY player_id limit 5`,
+    function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+      console.log(
+        "================================================================="
+      );
+      console.log(fields);
+      var users = [];
+      var scores = [];
+      var content = [];
+      for (i = 0; i < result.length; i++) {
+        users.push(result[i].player_id);
+        scores.push(result[i]["time"]);
+        content.push([result[i].player_id, result[i].email, result[i].time]);
+      }
+      con.query(
+        `SELECT COUNT(*) as total, COUNT(question1) as level1,COUNT(question2) as level2,COUNT(question3) as level3,COUNT(question4) as level4,COUNT(question5) as level5,COUNT(question7) as level7 FROM game_stat WHERE stat != 8`,
+        function (err, result1, field) {
+          if (err) throw err;
+          var quiters = [0, 0, 0, 0, 0, 0, 0];
+          var total = result1[0]["total"];
+          quiters[6] = result1[0]["level7"];
+          quiters[5] = result1[0]["level5"];
+          quiters[4] = result1[0]["level4"];
+          quiters[3] = result1[0]["level3"];
+          quiters[2] = result1[0]["level2"];
+          quiters[1] = result1[0]["level1"];
+          quiters[0] = total;
+          qui = [0, 0, 0, 0, 0, 0, 0];
+          for (i = 0; i < 6; i++) {
+            qui[i] = quiters[i + 1] - quiters[i];
+          }
+          res.render("dashboard", {
+            users: JSON.stringify(users),
+            scores: JSON.stringify(scores),
+            quiters: JSON.stringify(qui),
+            content: JSON.stringify(content),
+          });
+        }
+      );
+    }
+  );
 });
