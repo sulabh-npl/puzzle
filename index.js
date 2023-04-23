@@ -80,6 +80,9 @@ app.post("/login", isLoggedOut, async (req, res) => {
           session.user = email;
           session.name = result[0].name;
           session.isAdmin = result[0].isAdmin;
+          if (session.isAdmin == 1) {
+            return redirect("/dashboard");
+          }
           return res.redirect("/");
         } else {
           return res.render("login", { msg: "Incorrect Password" });
