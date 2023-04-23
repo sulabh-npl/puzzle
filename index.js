@@ -372,7 +372,7 @@ app.use(isAdmin);
 
 app.get("/dashboard", async (req, res) => {
   await con.query(
-    `SELECT g.player_id as email, u.name as player_id,MIN(g.total_time) as time FROM game_stat g, users u where stat = 8 and u.email = g.player_id GROUP BY player_id limit 5`,
+    `SELECT g.player_id as email, u.name as player_id,MIN(g.total_time) as time FROM game_stat g, users u where stat = 8 and u.email = g.player_id GROUP BY player_id ORDER BY time`,
     function (err, result, fields) {
       if (err) {
         console.log(err);
@@ -383,8 +383,10 @@ app.get("/dashboard", async (req, res) => {
       var scores = [];
       var content = [];
       for (i = 0; i < result.length; i++) {
-        users.push(result[i].player_id);
-        scores.push(result[i]["time"]);
+        if (i < 5) {
+          users.push(result[i].player_id);
+          scores.push(result[i]["time"]);
+        }
         content.push([result[i].player_id, result[i].email, result[i].time]);
       }
       con.query(
