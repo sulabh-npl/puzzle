@@ -58,7 +58,7 @@ To start the project
 
 ## Demo
 
-[Click here for demo](https://2du8u6-5000.csb.app/)
+[Click here for demo](https://94q1nx-5000.csb.app/)
 
 
 ## Solutions
