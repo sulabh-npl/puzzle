@@ -203,7 +203,14 @@ app.post("/question1", (req, res) => {
     req.session.time = req.body.time;
     req.session.wrong = req.body.wrong;
     con.query(
-      `UPDATE game_stat SET question1='${req.session.time}', wrong1= '${req.session.wrong}',total_time='${req.body.time}', stat= '1' WHERE id=${req.session.game_id}`
+      `UPDATE game_stat SET question1='${req.session.time}', wrong1= '${req.session.wrong}',total_time='${req.body.time}', stat= '1' WHERE id=${req.session.game_id}`,
+      function (err, result, field) {
+        if (err) {
+          console.log(err);
+          connect();
+          return;
+        }
+      }
     );
     res.send({ result: true });
   } else {
@@ -215,7 +222,14 @@ app.post("/question2", (req, res) => {
     req.session.time = req.body.time - req.session.time;
     req.session.wrong = req.body.wrong - req.session.wrong;
     con.query(
-      `UPDATE game_stat SET question2='${req.session.time}', wrong2= '${req.session.wrong}',total_time='${req.body.time}', stat= '2' WHERE id='${req.session.game_id}'`
+      `UPDATE game_stat SET question2='${req.session.time}', wrong2= '${req.session.wrong}',total_time='${req.body.time}', stat= '2' WHERE id='${req.session.game_id}'`,
+      function (err, result, field) {
+        if (err) {
+          console.log(err);
+          connect();
+          return;
+        }
+      }
     );
     res.send({ result: true });
   } else {
@@ -227,7 +241,14 @@ app.post("/question3", (req, res) => {
     req.session.time = req.body.time - req.session.time;
     req.session.wrong = req.body.wrong - req.session.wrong;
     con.query(
-      `UPDATE game_stat SET question3='${req.session.time}', wrong3= '${req.session.wrong}',total_time='${req.body.time}', stat= '3' WHERE id='${req.session.game_id}'`
+      `UPDATE game_stat SET question3='${req.session.time}', wrong3= '${req.session.wrong}',total_time='${req.body.time}', stat= '3' WHERE id='${req.session.game_id}'`,
+      function (err, result, field) {
+        if (err) {
+          console.log(err);
+          connect();
+          return;
+        }
+      }
     );
     res.send({ result: true });
   } else {
@@ -237,7 +258,14 @@ app.post("/question3", (req, res) => {
 app.post("/question4", (req, res) => {
   req.session.time = req.body.time - req.session.time;
   con.query(
-    `UPDATE game_stat SET question4=${req.session.time},total_time='${req.body.time}', stat= '4' WHERE id='${req.session.game_id}'`
+    `UPDATE game_stat SET question4=${req.session.time},total_time='${req.body.time}', stat= '4' WHERE id='${req.session.game_id}'`,
+    function (err, result, field) {
+      if (err) {
+        console.log(err);
+        connect();
+        return;
+      }
+    }
   );
   req.session.valid = 1;
   res.send({ result: true });
@@ -253,7 +281,14 @@ app.post("/question5", async (req, res) => {
   req.session.time = req.body.time - req.session.time;
   req.session.wrong = req.body.wrong - req.session.wrong;
   await con.query(
-    `UPDATE game_stat SET question5='${req.session.time}', wrong5= '${req.session.wrong}',total_time='${req.body.time}', stat= '5' WHERE id='${req.session.game_id}'`
+    `UPDATE game_stat SET question5='${req.session.time}', wrong5= '${req.session.wrong}',total_time='${req.body.time}', stat= '5' WHERE id='${req.session.game_id}'`,
+    function (err, result, field) {
+      if (err) {
+        console.log(err);
+        connect();
+        return;
+      }
+    }
   );
   res.send({ result: true });
 });
@@ -265,7 +300,14 @@ app.post("/question7", (req, res) => {
     req.session.time = req.body.time - req.session.time;
     req.session.wrong = req.body.wrong - req.session.wrong;
     con.query(
-      `UPDATE game_stat SET question7='${req.session.time}', wrong7= '${req.session.wrong}',total_time='${req.body.time}', stat= '7' WHERE id='${req.session.game_id}'`
+      `UPDATE game_stat SET question7='${req.session.time}', wrong7= '${req.session.wrong}',total_time='${req.body.time}', stat= '7' WHERE id='${req.session.game_id}'`,
+      function (err, result, field) {
+        if (err) {
+          console.log(err);
+          connect();
+          return;
+        }
+      }
     );
     res.send({ result: true });
   } else {
@@ -277,19 +319,40 @@ app.post("/question8", (req, res) => {
   if (req.body.answer == "false") {
     req.session.time = req.body.time - req.session.time;
     con.query(
-      `UPDATE game_stat SET total_time='${req.body.time}', stat= '8' WHERE id='${req.session.game_id}'`
+      `UPDATE game_stat SET total_time='${req.body.time}', stat= '8' WHERE id='${req.session.game_id}'`,
+      function (err, result, field) {
+        if (err) {
+          console.log(err);
+          connect();
+          return;
+        }
+      }
     );
     res.send({ result: true });
   } else {
     con.query(
-      `UPDATE game_stat SET total_time='${req.body.time}', stat= '-1' WHERE id='${req.session.game_id}' `
+      `UPDATE game_stat SET total_time='${req.body.time}', stat= '-1' WHERE id='${req.session.game_id}' `,
+      function (err, result, field) {
+        if (err) {
+          console.log(err);
+          connect();
+          return;
+        }
+      }
     );
     res.send({ result: false });
   }
 });
 app.post("/out", (req, res) => {
   con.query(
-    `UPDATE game_stat SET total_time='${req.body.time}', stat='-1' WHERE id='${req.session.game_id}'`
+    `UPDATE game_stat SET total_time='${req.body.time}', stat='-1' WHERE id='${req.session.game_id}'`,
+    function (err, result, field) {
+      if (err) {
+        console.log(err);
+        connect();
+        return;
+      }
+    }
   );
   res.send("out");
 });
@@ -327,7 +390,11 @@ app.get("/dashboard", async (req, res) => {
       con.query(
         `SELECT COUNT(*) as total, COUNT(question1) as level1,COUNT(question2) as level2,COUNT(question3) as level3,COUNT(question4) as level4,COUNT(question5) as level5,COUNT(question7) as level7 FROM game_stat WHERE stat != 8`,
         function (err, result1, field) {
-          if (err) throw err;
+          if (err) {
+            console.log(err);
+            connect();
+            return;
+          }
           var quiters = [0, 0, 0, 0, 0, 0, 0];
           var total = result1[0]["total"];
           quiters[6] = result1[0]["level7"];
