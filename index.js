@@ -81,7 +81,7 @@ app.post("/login", isLoggedOut, async (req, res) => {
           session.name = result[0].name;
           session.isAdmin = result[0].isAdmin;
           if (session.isAdmin == 1) {
-            return redirect("/dashboard");
+            return res.redirect("/dashboard");
           }
           return res.redirect("/");
         } else {
