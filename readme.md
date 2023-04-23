@@ -58,7 +58,7 @@ To start the project
 
 ## Demo
 
-[Click here for demo](http://sulabh-assignment.ap-1.evennode.com/)
+[Click here for demo](https://2du8u6-5000.csb.app/)
 
 
 ## Solutions
