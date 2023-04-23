@@ -44,6 +44,8 @@ connect()
   })
   .catch((err) => {
     console.log(err);
+    connect();
+    return;
   });
 function isLoggedOut(req, res, next) {
   if (req.session.user) {
@@ -106,25 +108,17 @@ app.post("/register", isLoggedOut, async (req, res) => {
       return;
     }
     await con.query(
-      `SELECT * FROM users WHERE email='${email}'`,
-      (err1, result1, fields) => {
-        if (result1.length == 1) {
-          return res.render("register", {
-            msg: "User already exists from this email try loggin in",
-          });
-        }
-      }
-    );
-    await con.query(
       `INSERT INTO users VALUES ('${email}','${result}', '${name}','0')`,
-      (err, result, fields) => {
-        if (!err) {
+      (err1, result, fields) => {
+        if (!err1) {
           var session = req.session;
           session.user = email;
           session.name = name;
           return res.redirect("/");
         }
-        res.send(err);
+        return res.render("register", {
+          msg: "User already exists from this email try loggin in",
+        });
       }
     );
   });
@@ -154,8 +148,6 @@ app.get("/new", async (req, res) => {
       }
       var id = result[0]["id"];
       req.session.game_id = id;
-      console.log(req.session.game_id);
-      console.log(req.session);
       res.redirect("/play");
     }
   );
@@ -166,16 +158,15 @@ app.get("/resume", async (req, res) => {
     `SELECT * FROM game_stat WHERE player_id='${req.session.user}' AND stat < 8 AND stat != -1 ORDER BY id DESC limit 1`,
     function (err, result, fields) {
       if (result.length == 0) {
-        res.send("You have no pending Game try new one by refresing this page");
+        return res.send(
+          "You have no pending Game try <a href='/new'>new game</a>"
+        );
       }
-      console.log(result);
-      console.log(JSON.stringify(result));
       if (err) {
         console.log(err);
         connect();
         return;
       }
-      console.log(fields);
       req.session.game_id = result[0]["id"];
       req.session.time = result[0]["total_time"];
       req.session.lvl = result[0]["stat"];
@@ -196,7 +187,6 @@ app.get("/play", (req, res) => {
     res.redirect("/");
   }
   req.session.valid = null;
-  console.log(req.session);
   res.render("game", {
     lvl: req.session.lvl,
     time: req.session.time,
@@ -255,11 +245,8 @@ app.post("/question4", (req, res) => {
 app.post("/question5", async (req, res) => {
   var ans = ["1", "6", "7", "2", "3", "8", "4"];
   var ans_from = JSON.parse(req.body.answer);
-  console.log(req.body.answer);
   for (i = 0; i < 7; i++) {
     if (ans_from[i] != ans[i]) {
-      console.log(req.body.answer[i]);
-      console.log(ans[i]);
       return res.send({ result: false });
     }
   }
@@ -288,7 +275,6 @@ app.post("/question7", (req, res) => {
 
 app.post("/question8", (req, res) => {
   if (req.body.answer == "false") {
-    console.log(req.body.answer + "app");
     req.session.time = req.body.time - req.session.time;
     con.query(
       `UPDATE game_stat SET total_time='${req.body.time}', stat= '8' WHERE id='${req.session.game_id}'`
@@ -298,7 +284,6 @@ app.post("/question8", (req, res) => {
     con.query(
       `UPDATE game_stat SET total_time='${req.body.time}', stat= '-1' WHERE id='${req.session.game_id}' `
     );
-    console.log(req.body.answer);
     res.send({ result: false });
   }
 });
@@ -306,7 +291,6 @@ app.post("/out", (req, res) => {
   con.query(
     `UPDATE game_stat SET total_time='${req.body.time}', stat='-1' WHERE id='${req.session.game_id}'`
   );
-  console.log("a");
   res.send("out");
 });
 
@@ -327,12 +311,11 @@ app.get("/dashboard", async (req, res) => {
   await con.query(
     `SELECT g.player_id as email, u.name as player_id,MIN(g.total_time) as time FROM game_stat g, users u where stat = 8 and u.email = g.player_id GROUP BY player_id limit 5`,
     function (err, result, fields) {
-      if (err) throw err;
-      console.log(result);
-      console.log(
-        "================================================================="
-      );
-      console.log(fields);
+      if (err) {
+        console.log(err);
+        connect();
+        return;
+      }
       var users = [];
       var scores = [];
       var content = [];
