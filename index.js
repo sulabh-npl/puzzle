@@ -115,10 +115,11 @@ app.post("/register", isLoggedOut, async (req, res) => {
           session.user = email;
           session.name = name;
           return res.redirect("/");
+        } else {
+          return res.render("register", {
+            msg: "User already exists from this email try loggin in",
+          });
         }
-        return res.render("register", {
-          msg: "User already exists from this email try loggin in",
-        });
       }
     );
   });
